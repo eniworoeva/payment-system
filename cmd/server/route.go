@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"payment-system-one/internal/api"
+	"payment-system-one/internal/middleware"
 	"payment-system-one/internal/ports"
 	"time"
 )
@@ -23,6 +24,15 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	r := router.Group("/")
 	{
 		r.GET("/", handler.Readiness)
+		r.POST("/create", handler.CreateUser)
+		r.POST("/login", handler.LoginUer)
+	}
+
+	// authorizeAdmin authorizes all authorized users handlers
+	authorizeAdmin := r.Group("/admin")
+	authorizeAdmin.Use(middleware.AuthorizeAdmin(repository.FindUserByEmail, repository.TokenInBlacklist))
+	{
+		authorizeAdmin.GET("/user", handler.GetUserByEmail)
 	}
 
 	return router
