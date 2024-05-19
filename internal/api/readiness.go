@@ -38,7 +38,6 @@ func (u *HTTPHandler) CreateUser(c *gin.Context) {
 		return
 	}
 	util.Response(c, "user created", 200, "success", nil)
-	return
 }
 
 // login
