@@ -4,6 +4,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"payment-system-one/internal/models"
 	"payment-system-one/internal/ports"
 )
 
@@ -25,7 +26,7 @@ func Initialize(dbURI string) (*gorm.DB, error) {
 	if err != nil {
 		//	log.Fatal(err)
 	}
-	err = conn.AutoMigrate()
+	err = conn.AutoMigrate(&models.User{})
 	if err != nil {
 		return nil, err
 	}
