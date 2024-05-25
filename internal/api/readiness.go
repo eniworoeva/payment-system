@@ -28,11 +28,28 @@ func (u *HTTPHandler) CreateUser(c *gin.Context) {
 	}
 
 	//validate user email
+	if !util.IsValidEmail(user.Email) {
+		util.Response(c, "invalid email", 400, "Bad request body", nil)
+		return
+	}
 
-	//validate user password
+	//check if user already exists
+	_, err := u.Repository.FindUserByEmail(user.Email)
+	if err == nil {
+		util.Response(c, "User already exists", 400, "Bad request body", nil)
+		return
+	}
+
+	hashPass, err := util.HashPassword(user.Password)
+	if err != nil {
+		util.Response(c, "could not hash password", 500, "internal server error", nil)
+		return
+	}
+
+	user.Password = hashPass
 
 	//persist information in the data base
-	err := u.Repository.CreateUser(user)
+	err = u.Repository.CreateUser(user)
 	if err != nil {
 		util.Response(c, "user not created", 400, err.Error(), nil)
 		return
