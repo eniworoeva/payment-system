@@ -33,6 +33,7 @@ func (u *HTTPHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 
+	//hash password
 	hashPass, err := util.HashPassword(user.Password)
 	if err != nil {
 		util.Response(c, "could not hash password", 500, "internal server error", nil)
@@ -40,6 +41,18 @@ func (u *HTTPHandler) RegisterUser(c *gin.Context) {
 	}
 
 	user.Password = hashPass
+
+	//generate account number
+	acctNo, err := util.GenerateAccountNumber()
+	if err != nil {
+		util.Response(c, "could not generate account number", 500, "internal server error", nil)
+		return
+	}
+
+	user.AccountNo = acctNo
+
+	//set available balance to zero
+	user.AvailableBalance = 0.0
 
 	//persist information in the data base
 	err = u.Repository.CreateUser(user)
@@ -119,4 +132,88 @@ func (u *HTTPHandler) GetUserByEmail(c *gin.Context) {
 	}
 
 	util.Response(c, "user found", 200, user, nil)
+}
+
+
+func (u *HTTPHandler) TransferFunds(c *gin.Context) {
+	//declare request body struct
+	var transferRequest *models.TransferRequest
+
+	//bind JSON data to struct
+	if err := c.ShouldBind(&transferRequest); err != nil {
+		util.Response(c, "invalid request", 400, "bad request body", nil)
+		return
+	}
+
+	//Get user from context
+	user, err := u.GetUserFromContext(c)
+	if err != nil {
+		util.Response(c, "User not logged in", 500, "user not found", nil)
+		return
+	}
+
+	//validate the amount
+	if transferRequest.Amount <= 0 {
+		util.Response(c, "invalid amount", 400, "invalid amount", nil)
+		return
+	}
+
+	//check if the account number exist
+	recipient, err := u.Repository.FindUserByAccountNumber(transferRequest.AccountNumber)
+	if err != nil {
+		util.Response(c, "account number does not exist", 400, "account number does not exist", nil)
+		return
+	}
+
+	//check if amount being transferred is less than the user's current balance
+	if user.AvailableBalance < transferRequest.Amount {
+		util.Response(c, "insufficient funds", 400, "insufficient funds", nil)
+		return
+	}
+
+	//persist the data into the db
+	err = u.Repository.TransferFunds(user, recipient, transferRequest.Amount)
+	if err != nil {
+		util.Response(c, "transfer failed", 500, "transfer failed", nil)
+		return
+	}
+
+	util.Response(c, "transfer successful", 200, "transfer successful", nil)
+}
+
+// Add money to user account
+func (u *HTTPHandler) AddMoney(c *gin.Context) {
+	//declare request body struct
+	var transferRequest *models.TransferRequest
+
+	//bind JSON data to struct
+	if err := c.ShouldBind(&transferRequest); err != nil {
+		util.Response(c, "invalid request", 400, "bad request body", nil)
+		return
+	}
+
+	//Get user from context
+	user, err := u.GetUserFromContext(c)
+	if err != nil {
+		util.Response(c, "User not logged in", 500, "user not found", nil)
+		return
+	}
+
+	//validate the amount
+	if transferRequest.Amount <= 0 {
+		util.Response(c, "invalid amount", 400, "invalid amount", nil)
+		return
+	}
+
+	//add the amount to the user's account
+	user.AvailableBalance += transferRequest.Amount
+
+	//persist the data into the db
+	err = u.Repository.UpdateUser(user)
+	if err != nil {
+		util.Response(c, "add money failed", 500, "add money failed", nil)
+		return
+	}
+
+	util.Response(c, "add money successful", 200, "add money successful", nil)
 }
