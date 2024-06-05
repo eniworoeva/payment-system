@@ -39,13 +39,13 @@ type Admin struct {
 
 type Transaction struct {
 	gorm.Model
-	PayerAccountNumber     int       `json:"payer_account_number"`
-	RecipientAccountNumber int       `json:"recipient_account_number"`
-	TransactionType        string    `json:"transaction_type"`
-	TransactionAmount      float64   `json:"transaction_amount"`
+	PayerAccountNumber     int     `json:"payer_account_number"`
+	RecipientAccountNumber int     `json:"recipient_account_number"`
+	TransactionType        string  `json:"transaction_type"`
+	TransactionAmount      float64 `json:"transaction_amount"`
 	// BalanceBefore          float64   `json:"balance_before"`
 	// BalanceAfter           float64   `json:"balance_after"`
-	TransactionDate        time.Time `json:"transaction_date"`
+	TransactionDate time.Time `json:"transaction_date"`
 }
 
 type LoginRequest struct {

@@ -134,7 +134,6 @@ func (u *HTTPHandler) GetUserByEmail(c *gin.Context) {
 	util.Response(c, "user found", 200, user, nil)
 }
 
-
 func (u *HTTPHandler) TransferFunds(c *gin.Context) {
 	//declare request body struct
 	var transferRequest *models.TransferRequest
