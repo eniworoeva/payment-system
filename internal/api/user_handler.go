@@ -233,7 +233,7 @@ func (u *HTTPHandler) BalanceCheck(c *gin.Context) {
 
 // Transaction history
 
-func (u *HTTPHandler) TransactionHistory(c *gin.Context) {
+func (u *HTTPHandler) UserTransactionHistory(c *gin.Context) {
 
 	// get user from context
 	user, err := u.GetUserFromContext(c)
