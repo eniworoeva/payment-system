@@ -226,9 +226,7 @@ func (u *HTTPHandler) BalanceCheck(c *gin.Context) {
 		return
 	}
 	// checking balance
-	util.Response(c, "Balance retrieved successfully", 200, "sucess", nil)
-	c.IndentedJSON(200, gin.H{"balance": user.AvailableBalance})
-
+	util.Response(c, "Balance retrieved successfully", 200, gin.H{"balance": user.AvailableBalance}, nil)
 }
 
 // Transaction history
@@ -247,6 +245,5 @@ func (u *HTTPHandler) UserTransactionHistory(c *gin.Context) {
 		util.Response(c, "count not retrieve trasaction", 500, "not retrieved", nil)
 		return
 	}
-	util.Response(c, "transaction successfully retrieved", 200, "successful", nil)
-	c.IndentedJSON(200, gin.H{"Transaction History": transaction})
+	util.Response(c, "transaction successfully retrieved", 200, transaction, nil)
 }
