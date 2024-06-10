@@ -78,3 +78,13 @@ func (p *Postgres) TransferFunds(user *models.User, recipient *models.User, amou
 	tx.Commit()
 	return nil
 }
+
+// Transaction
+func (p *Postgres) Transaction(account_no int) ([]models.Transaction, error) {
+	transactions := []models.Transaction{}
+
+	if err := p.DB.Where("payer_account_number = ? OR recipient_account_number = ?", account_no, account_no).Find(&transactions).Error; err != nil {
+		return nil, err
+	}
+	return transactions, nil
+}

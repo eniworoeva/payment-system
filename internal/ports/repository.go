@@ -11,4 +11,6 @@ type Repository interface {
 	CreateAdmin(admin *models.Admin) error
 	FindUserByAccountNumber(accountNumber int) (*models.User, error)
 	TransferFunds(user *models.User, recipient *models.User, amount float64) error
+	Transaction(account_no int) ([]models.Transaction, error)
+
 }

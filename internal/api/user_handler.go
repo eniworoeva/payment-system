@@ -216,3 +216,37 @@ func (u *HTTPHandler) AddMoney(c *gin.Context) {
 
 	util.Response(c, "add money successful", 200, "add money successful", nil)
 }
+
+func (u *HTTPHandler) BalanceCheck(c *gin.Context) {
+
+	// get user from context
+	user, err := u.GetUserFromContext(c)
+	if err != nil {
+		util.Response(c, "user not fount", 500, "user not found", nil)
+		return
+	}
+	// checking balance
+	util.Response(c, "Balance retrieved successfully", 200, "sucess", nil)
+	c.IndentedJSON(200, gin.H{"balance": user.AvailableBalance})
+
+}
+
+// Transaction history
+
+func (u *HTTPHandler) TransactionHistory(c *gin.Context) {
+
+	// get user from context
+	user, err := u.GetUserFromContext(c)
+	if err != nil {
+		util.Response(c, "user not fount", 500, "user not found", nil)
+		return
+	}
+	// Add/ create a  function to the repository  to retrive the transacton history
+	transaction, err := u.Repository.Transaction(user.AccountNo)
+	if err != nil {
+		util.Response(c, "count not retrieve trasaction", 500, "not retrieved", nil)
+		return
+	}
+	util.Response(c, "transaction successfully retrieved", 200, "successful", nil)
+	c.IndentedJSON(200, gin.H{"Transaction History": transaction})
+}
