@@ -262,6 +262,9 @@ func (u *HTTPHandler) Dashboard(c *gin.Context) {
 	}
 
 	dashboard := models.Dashboard{
+		FirstName:        user.FirstName,
+		LastName:         user.LastName,
+		Email:            user.Email,
 		AccountNo:        user.AccountNo,
 		AvailableBalance: user.AvailableBalance,
 		UserTransactions: transaction,
