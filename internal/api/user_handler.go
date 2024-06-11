@@ -226,7 +226,7 @@ func (u *HTTPHandler) BalanceCheck(c *gin.Context) {
 		return
 	}
 	// checking balance
-	util.Response(c, "Balance retrieved successfully", 200, gin.H{"balance": user.AvailableBalance}, nil)
+	util.Response(c, "Balance retrieved successfully", 200, gin.H{"balance": user}, nil)
 }
 
 // Transaction history
