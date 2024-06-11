@@ -59,6 +59,9 @@ type TransferRequest struct {
 }
 
 type Dashboard struct {
+	FirstName        string        `json:"first_name"`
+	LastName         string        `json:"last_name"`
+	Email            string        `json:"email"`
 	AccountNo        int           `json:"account_no"`
 	AvailableBalance float64       `json:"available_balance"`
 	UserTransactions []Transaction `json:"user_transactions"`
