@@ -54,6 +54,6 @@ type LoginRequest struct {
 }
 
 type TransferRequest struct {
-	AccountNumber int     `json:"account_number"`
+	AccountNumber int     `json:"account_no"`
 	Amount        float64 `json:"amount"`
 }
