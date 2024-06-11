@@ -38,6 +38,7 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 		authorizeUser.POST("/addfunds", handler.AddMoney)
 		authorizeUser.GET("/transaction", handler.UserTransactionHistory)
 		authorizeUser.GET("/balance", handler.BalanceCheck)
+		authorizeUser.GET("/dashboard", handler.Dashboard)
 
 	}
 
