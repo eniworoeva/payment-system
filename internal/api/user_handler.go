@@ -247,3 +247,25 @@ func (u *HTTPHandler) UserTransactionHistory(c *gin.Context) {
 	}
 	util.Response(c, "transaction successfully retrieved", 200, transaction, nil)
 }
+
+func (u *HTTPHandler) Dashboard(c *gin.Context) {
+	user, err := u.GetUserFromContext(c)
+	if err != nil {
+		util.Response(c, "user not fount", 500, "user not found", nil)
+		return
+	}
+
+	transaction, err := u.Repository.Transaction(user.AccountNo)
+	if err != nil {
+		util.Response(c, "count not retrieve trasaction", 500, "not retrieved", nil)
+		return
+	}
+
+	dashboard := models.Dashboard{
+		AccountNo:        user.AccountNo,
+		AvailableBalance: user.AvailableBalance,
+		UserTransactions: transaction,
+	}
+
+	util.Response(c, "transaction successfully retrieved", 200, gin.H{"transaction": dashboard}, nil)
+}

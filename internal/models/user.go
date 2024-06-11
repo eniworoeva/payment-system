@@ -57,3 +57,9 @@ type TransferRequest struct {
 	AccountNumber int     `json:"account_no"`
 	Amount        float64 `json:"amount"`
 }
+
+type Dashboard struct {
+	AccountNo        int           `json:"account_no"`
+	AvailableBalance float64       `json:"available_balance"`
+	UserTransactions []Transaction `json:"user_transactions"`
+}
